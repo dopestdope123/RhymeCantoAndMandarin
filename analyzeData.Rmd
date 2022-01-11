@@ -1,0 +1,278 @@
+---
+title: "Comparative Studies of Rhyming in Cantonese and Mandarin"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    df_print: paged
+    theme: united
+    toc: yes
+    toc_depth: 2
+    toc_float: yes
+    collapsed: no
+    number_sections: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+```{r setup, include=FALSE}
+# some basic settings for this .Rmd file
+knitr::opts_chunk$set(echo = TRUE, cache=F)
+```
+
+```{r,echo=F,warning=F,message=F,cache=F}
+require(jsonlite)
+require(tidyverse)
+library(ggplot2)
+library(lme4)
+library(scales)
+library(texreg)
+library(grid)
+library(gridExtra)
+# avoids that `select` from MASSinstead of dplyr is used:
+select <- dplyr::select
+# by default, show only 3 digits:
+options(digits=3)
+```
+
+```{r,echo=F,warning=F,message=F}
+
+# load some R functions:
+source('importJSONData.R')
+
+# Load your data
+results = importData()
+
+# experimental trials with participant information:
+d = results$data
+# experiment settings:
+experimentSettings = results$settings
+
+# the rating is the variable 'chosenOption':
+d$response = as.numeric(as.character(d$chosenOption))
+```
+
+
+
+
+
+Jack Ryan & Peter Qian
+
+# Abstract
+Following Wagner and McCurdy's 2010 study on identity rhymes in French and English, this paper reports on a comparative study exploring the perception of identity rhymes in Mandarin and Cantonese.
+
+# Introduction Section
+
+Rhymes refer to the word pairs at the end of two poetic sentences with different onset, same nucleus and coda(if present). Identity rhymes refer to the rhymes with same onset.Identity rhyme is acceptable according to Great Song Revised and Expanded Rhymes, while in English poetry it is considered to be “unconventional and even unacceptable”  and to “fall ridiculously flat”(Wagner&McCurdy 2010).  
+
+This paper reports on a study of identity rhyme in Cantonese and Mandarin. As in Wagner and McCurdy's 2010 study on French and English, this research seeks to find the extent to which Mandarin and Cantonese speakers consider rhymes with the same onset, identity rhymes, to be good. Furthermore, we consider what impact, if any, tone has on rhyme quality. We assumed that rhymes Mandarin and Cantonese both have a similar property to English rhymes is that rhymes with same onset, nucleus, and coda sounds worse to the native speakers comparing to the rhyme with different nucleus and coda.
+
+Contrast to the defition of rhymes in English, in Middle Chinese, the predecessor of Mandarin and Cantonese, rhymes with the same onset are allowed. Further, a level tone cannot rhyme with another level tone, and a non-level tone cannot rhyme with another non-level tone (see *Great Song Revised and Expanded Rhymes (陳 and 邱 1008)). According to the anecdotes of some Mandarin and Cantonese speakers, the identity rhymes are considered natural but there was not a perception study to test that judgement. We will examine if these constraints on rhymes in Middle Chinese also hold in Mandarin and Cantonese.
+
+Mandarin has lost some tone features in Middle Chinese while some features could still be found in Cantonese. For example, the word "国" (state) has a level tone in Mandarin but its tone in Middle Chinese is oblique. Therefore, it is important for us not only study the aspect of roles of syllables but also the role that tones play in the rhyming of these two languages.
+
+In Wagner and McCurdy (2010), the native French speakers rate as good both identity rhymes and "good rhymes" (rhymes with different onset but same nucleus and coda). We designed a comparative experiment based on Wagner and McCurdy (2010) to see what instincts Mandarin and Cantonese have on rhyming syllables with the same onset. We find that Mandarin and Cantonese follow Middle Chinese in allowing identical rhymes.
+
+We further tested whether tone affects rhyming judgements in Mandarin and Cantonese and found that, unlike in Middle Chinese, it does not.
+
+
+
+# Methods
+
+We had ten Mandarin speakers and nine Cantonese speakers listen to several mini-poems in a random order. Each mini-poem had one of four conditions:
+
+* DiffOnset SameFinal (like Wagner and McCurdy's 'Good')
+* SameOnset SameFinal SameTone (like Wagner and McCurdy's 'Identical')
+* SameOnset SameFinal DiffTone (added to test if Mandarin and Cantonese's tones affect rhyming judgements)
+* DiffFinal (like Wagner and McCurdy's 'Bad')
+   
+   
+Following the ‘within’-style design, the participants listened to every mini-poem in their chosen variety. With the goal of comparing the quality of the four conditions, the experiment had participants rate the rhymes from 1 (Very Bad) to 6 (Very Good). After the main part of the experiment, they were debriefed and asked to provide feedback.
+
+
+Cantonese speakers listened to sixteen couplets (4 conditions $\times$ 4 sets) and Mandarin speakers listened to thirty-two couplets (4 conditions $\times$ 8 sets).^[The Cantonese couplets were composed and recorded by Sophie Thompson, a volunteer, while the Mandarin couplets were composed and recorded by Qian.] Every set had one example of each of the four conditions and maintained the same second line throughout, thereby minimizing variation caused by change in mini-poem.
+
+
+The participants did not receive compensation and were not run on any other experiments.
+
+
+
+# Item sets samples:
+
+The following examples are transcriptions of the mini-poems participants listened to. ^[Participants did not see these written versions of the mini-poems.] The highlighted syllables are those whose rhyming quality was evaluated. Cantonese is transcribed in the International Phonetic Alphabet and Mandarin in Pīnyīn.
+
+## Cantonese Examples (from Item Set 2):
+* DiffOnset SameFinal:
+  + 我食咗好多牛耳 | 唔好俾媽媽知
+  + ŋɔː˩˧ sɪk̚˨ t͡sɔː˧˥ hou̯˧˥ tɔː˥ ŋɐu̯˨˩ **jiː˩˧** | m̩˨˩ hou̯˧˥ pei̯˧˥ maː˨˩ maː˥ **t͡siː˥**
+  + I ate a lot of cow’s ears. | Don’t let mom know.
+* SameOnset SameFinal SameTone:
+  + 我有枝樹枝 | 唔好俾媽媽知
+  + ŋɔː˩˧ jɐu̯˩˧ t͡siː˥ syː˨ **t͡siː˥** | m̩˨˩ hou̯˧˥ pei̯˧˥ maː˨˩ maː˥ **t͡siː˥**
+  + I have a stick. | Don’t let mom know.
+* SameOnset SameFinal DiffTone: 
+  + 我鎅親我嘅手指 | 唔好俾媽媽知
+  + ŋɔː˩˧ kaːi̯˧ tsʰɐn˥ ŋɔː˩˧ kɛː˧ sɐu̯˧˥ **t͡siː˧˥** | m̩˨˩ hou̯˧˥ pei̯˧˥ maː˨˩ maː˥ **t͡siː˥**
+  + I cut my finger. | Don’t let mom know.
+* DiffFinal:
+  * 我食咗啲熱氣 | 唔好俾媽媽知
+  * ŋɔː˩˧ sɪk̚˨ t͡sɔː˧˥ tiː˥ jiːt̚˨ **hei̯˧ **| m̩˨˩ hou̯˧˥ pei̯˧˥ maː˨˩ maː˥ **t͡siː˥**
+  * I ate some hot air. | Don’t let mom know.
+  
+## Mandarin Examples (from Item Set 8):
+* In this example, the contrast in tones also fits the tone pattern constrast(level versus pattern)
+* DiffOnset SameFinal:
+  * 他有玻璃杯 | 我在泡咖啡	
+  * ta1 you3 bo1 li2 **bei1** | wo3 zai4 pao4 ka1 **fei1**	
+  * He has a glass | I'm making coffee
+* SameOnset SameFinal SameTone:
+  * 你要论是非 | 我在泡咖啡	
+  * ni3 yao4 lun4 shi4 **fei1** | wo3 zai4 pao4 ka1 **fei1**	
+  * You want to argue about right or wrong | I'm making coffee
+* SameOnset SameFinal DiffTone:
+  * 手机已报废 | 我在泡咖啡	
+  * shou3 ji1 yi3 bao4 **fei4** | wo3 zai4 pao4 ka1 **fei1**
+  * My phone is dead | I'm making coffee
+* DiffFinal:
+  * 他要喝果汁 | 我在泡咖啡	
+  * ni3 yao4 he1 guo3 **zhi1** | wo3 zai4 pao4 ka1 **fei1**	
+  * He wants to drink juice | I'm making coffee 
+
+
+# Results
+The first two graphs (below) demonstrate how Cantonese and Mandarin speakers ranked each condition’s rhyme quality. The number next to each point represents the arithmetic mean rating for each condition. Speakers expectedly ranked DiffFinal as poor; the other three conditions, overlapping error bars, show no significant difference in their average rating.
+
+```{r figureExample1, fig.cap = "Response of the Cantonese experiment by condition ",echo=F,out.width="50%", fig.align = 'center'}
+newdata<-subset(d,experiment=="CantoneseRhyming")
+
+newdata %>%
+
+  
+  ggplot(
+  # here's where you set what's plotted on x and y axis:     
+       aes(x = condition,y = response)) +
+  # circles for the means:
+  stat_summary(fun=mean, geom="point",size=2, shape=1) + 
+  # error bars:
+  stat_summary(fun.data = "mean_cl_boot", geom="errorbar",size=0.2, width=.1) + 
+  # label with the proportion as text:
+  stat_summary(aes(label=round(..y..,2)), fun=mean, geom="text", size=2, hjust=-1) + 
+  # adjusting font size:
+  theme_bw(base_size = 12) + 
+  # adjusting label of axes:
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(labels=c("1"="DiffOnset SameFinal", "2"="SameOnset SameFinal SameTone", "3"="SameOnset SameFinal DiffTone", "4"="DiffFinal"))
+  
+```
+
+```{r figureExample2, fig.cap = "Response of the Mandarin experiment by condition",echo=F,out.width="50%", fig.align = 'center'}
+mdata<-subset(d,experiment=="MandarinRhyming")
+
+mdata %>%
+  
+  ggplot(
+  # here's where you set what's plotted on x and y axis:     
+       aes(x = condition,y = response)) +
+  # circles for the means:
+  stat_summary(fun=mean, geom="point",size=2, shape=1) + 
+  # error bars:
+  stat_summary(fun.data = "mean_cl_boot", geom="errorbar",size=0.2, width=.1) + 
+  # label with the proportion as text:
+  stat_summary(aes(label=round(..y..,2)), fun=mean, geom="text", size=2, hjust=-1) + 
+  # adjusting font size:
+  theme_bw(base_size = 12) + 
+  # adjusting label of axes:
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_x_discrete(labels=c("1"="DiffOnset SameFinal", "2"="SameOnset SameFinal SameTone", "3"="SameOnset SameFinal DiffTone", "4"="DiffFinal"))
+```
+The third and fourth graphs break up the data by item set, as labeled by the number above each sub-graph. As with the first two graphs, speakers consistently rate DiffFinal as poor and the other three conditions as good, with insignificant differences between these three.
+```{r figureExample3, fig.cap = "Average response of Mandarin experiment by item sets",echo=F,out.width="50%", fig.align = 'center'}
+newdata<-subset(d,experiment=="MandarinRhyming")
+
+newdata %>%
+
+  ggplot(
+  # here's where you set what's plotted on x and y axis:     
+       aes(x = condition,y = response)) +
+  # circles for the means:
+  stat_summary(fun=mean, geom="point",size=2, shape=1) + 
+  # error bars:
+  stat_summary(fun.data = "mean_cl_boot", geom="errorbar",size=0.2, width=.1) + 
+  # label with the proportion as text:
+  stat_summary(aes(label=round(..y..,2)), fun=mean, geom="text", size=2, hjust=-1) + 
+  # adjusting font size:
+  theme_bw(base_size = 12) + 
+  # adjusting label of axes:
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(labels=c("1"="DiffOnset SameFinal", "2"="SameOnset SameFinal SameTone", "3"="SameOnset SameFinal DiffTone", "4"="DiffFinal"))+
+  facet_wrap(~item)
+
+```
+
+```{r figureExample4, fig.cap = "Average response of Cantonese experiment by item sets",echo=F,out.width="50%", fig.align = 'center'}
+newdata<-subset(d,experiment=="CantoneseRhyming")
+
+newdata %>%
+  
+  ggplot(
+  # here's where you set what's plotted on x and y axis:     
+       aes(x = condition,y = response)) +
+  # circles for the means:
+  stat_summary(fun=mean, geom="point",size=2, shape=1) + 
+  # error bars:
+  stat_summary(fun.data = "mean_cl_boot", geom="errorbar",size=0.2, width=.1) + 
+  # label with the proportion as text:
+  stat_summary(aes(label=round(..y..,2)), fun=mean, geom="text", size=2, hjust=-1) + 
+  # adjusting font size:
+  theme_bw(base_size = 12) + 
+  # adjusting label of axes:
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_x_discrete(labels=c("1"="DiffOnset SameFinal", "2"="SameOnset SameFinal SameTone", "3"="SameOnset SameFinal DiffTone", "4"="DiffFinal"))+
+  facet_wrap(~item)
+```
+
+The results above demonstrate that participants in both experiments demonstrate that rhymes with the same onset are good in Mandarin and Cantonese whether the tone varies (as in SameOnset SameFinal DiffTone) or not (as in SameOnset SameFinal SameTone).
+
+Note that, in both Cantonese (item set 2) and Madnarin (item sets 4 and 8), level tones rhyming with non-level tones (as in SameOnset SameFinal DiffTone) are judged similarlly to level tones rhyming with other level tones (as in SameOnset SameFinal SameTone). This difference from Middle Chiense is discussed below.
+
+
+# Feedback
+The following are examples of feedback for the experiments (translated if necessary). 
+
+*   The quality of some recordings are not so good.
+*   I don't fully comprehend the rules for rating.
+*   I don't understand what a good rhyme is.
+
+Particularly helpful was the following feedback from a Cantonese participant. This person’s frustration at the lack of traditional Chinese, odd ordering of place names, and the lack of clear bilingual option point out important flaws in our pre-experiment survey which are to be rectified in future work
+*   the survey is written in simplified Chinese, which is unfriendly to Hong Kongers
+*   First question is about place of birth and residence, to be chosen from a dropdown menu. The names are listed in Chinese but follow the alphabetical order in English. This is confusing (e.g., I had to look for 香港 (Hong Kong) somewhere near the middle, and extract it from 海地 (Haiti)， 洪都拉斯 (Honduras)， etc.)
+*   This is where I gave up: you are only given one choice for 'mother tongue', but I consider myself as being bilingual from early childhood and can't really decide whether Cantonese or English is my mother tongue. I could not continue without the 'bilingual' option.
+
+# Discussion
+
+From the results we obtained as shown in the plots above.  Mandarin and Cantonese speakers have similar perception about the rhymes as what was tested in French(without the prescence of tone manipulation). Therefore, it contradicted our hypothesis that identity rhymes are bad in Mandarin and Cantonese. However, in a paper about Cantonese rhymes (Cheung 1996), Cheung proposed that Cantonese rhymes could be considered natural by native speakers even if the codas are different as long as they have same nucleus. Given the loss of codas in Mandarin comparing to Middle Chinese, a test we might be able to conduct in the future is that to test if voiced alveolar stop is able to rhyme with voiced velar stop given the same nucleus. For Mandarin speakers living in Southern China, many of them have trouble differentiating voiced alveolar stop and voiced velar stop so we assume that there's a variation in Mandarin speakers with respect to rhyming with different codas.
+ 
+Note that, unlike in Middle Chinese, two level-toned syllables rhyming are judged as good. For example, In Cantonese item set 2 (given in section 4 above), the last syllable of the second line is 知 /t͡siː˥/ which bears a high level tone^[Besides its synchronic status as a level tone, the Cantonese high level tone also descends from the Middle Chinese level tone. The other two Cantnonese level tones were historically falling tones for syllables ending in sonorants (Carlyle 2020 p.84). The Cantonese low falling tone, ˨˩, also descends from the Middle Chinese level tone, appearing in place of a high flat tone when the onset was historically voiced. (Gu and Simmons 2020 p.7, Carlyle 2020 p.84).] On average, speakers rated the rhyme between 枝 /t͡siː˥/ and 知 /t͡siː˥/ as good (in fact, slightly better than 指 /t͡siː˧˥/ and 知 /t͡siː˥/ where 指 has a rising tone). Despite both syllables having a level tone, they are still are good rhymes. Mandarin Item sets 4 and 8 demonstrate that Mandarin also shows little difference in judgment between level tones rhyming with non-level tones and with other level tones. The observation here is that Mandarin and Cantonese do not follow the rhyming constraint by tone contrast from Middle Chinese.
+
+Future research could focus on the impacts of this study on Wagner and McCurdy's discussion of the Williams effect. Like English but unlike French, Mandarin has anaphoric destressing. If Mandarin (or Cantonese) were found to also have the Williams effect, this would serve as counter evidence against Wagner and McCurdy's account of English and French differences.As what is mentioned above in (Chueng 1996),We can design an experiment to examine if some rhymes with different coda but same vowel can also be good rhymes. 
+
+
+An improvement to the methodology would be including a Traditional Chinese option. As discussed in the Feedback section, a participant was offended by the settings and decided to quit the experiment.
+
+
+
+# References
+
+* Carlyle, John. Common Yue: A Comparative Study of Yue Dialect Historical Phonology. University of Washington, 2020.
+* Chen, P. Qiu, Y (1008). Great Song Revised and Expanded Rhymes
+* Cheung, Hung-nin Samuel . "Songs and rhymes: Cantonese phonology as reconstructed from popular songs." Journal of Chinese Linguistics 24.1 (1996): 1-54.
+* Gu, Qian, and Richard VanNess Simmons. Common Phonology of the Chinese Dialects. Springer, 2020, https://doi.org/10.1007/978-981-15-3102-6.
+* Wagner, Michael, and Katherine McCurdy. “Poetic Rhyme Reflects Cross-Linguistic Differences in Information Structure.” Cognition, vol. 117, no. 2, Nov. 2010, pp. 166–75. PubMed, https://doi.org/10.1016/j.cognition.2010.08.007.
+
+
+
+
+    
+
